@@ -7,5 +7,11 @@ pipeline {
                 sh './gradlew clean build'
             }
         }
+         stage('Dockerize') {
+             steps {
+                 sh 'docker build . --file dockerfile --tag spring-gradle/image' 
+            }
+        }    
+        
     }
 }
