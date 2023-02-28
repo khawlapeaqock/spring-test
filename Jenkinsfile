@@ -12,17 +12,19 @@ pipeline {
                  sh 'docker build . --file dockerfile --tag my-microservice-repository:latest' 
             }
         }
-         stage('Push to ECR') {
+        stage('Push to ECR') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AKIAWKBYFO27JLX5KXOT', credentialsId: 'aws-user-passwd', secretKeyVariable: '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']])
-                {
-                    sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 433909495486.dkr.ecr.us-east-1.amazonaws.com'
-                    sh 'docker push 433909495486.dkr.ecr.us-east-1.amazonaws.com/my-microservice-repository:latest'
-                    
+                script {
+                    withCredentials([awsEcr(credentialsId: 'aws-user-passwd', region: "us-east-1", registryUrl: "433909495486.dkr.ecr.us-east-1.amazonaws.com")]) 
+                       {
+                            docker.withRegistry("433909495486.dkr.ecr.us-east-1.amazonaws.com", 'ecr') 
+                            {
+                            docker.image("my-microservice-repository:latest").push("433909495486.dkr.ecr.us-east-1.amazonaws.com/my-microservice-repository:latest")
+                            }
+                        }
+                    }
                 }
-            }
-            
-         }     
-          
+            }      
     }
 }
+ 
