@@ -8,7 +8,7 @@ WORKDIR /app
 COPY build/libs/demo-0.0.1-SNAPSHOT.jar /app.jar
 
 # Expose port 8080 for the container
-EXPOSE 8080
+EXPOSE 80
 
 # Set the command to run when the container starts
 CMD ["java", "-jar", "/app.jar"]
