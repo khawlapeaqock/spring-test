@@ -12,7 +12,15 @@ pipeline {
                  sh 'docker build . --file dockerfile --tag my-microservice-repository:latest' 
             }
         }
-              
+        
+
+        stage('hello AWS') {
+            steps {
+                withAWS(credentials: 'your-ecr-credentials-id', region: 'us-east-1') {
+                    sh 'echo "hello KB">hello.txt'
+                }
+            }
+        }    
       stage('Logging into AWS ECR') {
             steps {
                 script {
